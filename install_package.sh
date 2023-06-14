@@ -56,7 +56,7 @@ do
         continue
     fi
 
-    # Execute the PowerShell script remotely on the remote Windows device to install the SSH package
+    # Install the SSH package on remote device
     if ! ./winexe -U "$username%$password" //"$remote_device" "msiexec /passive /i C:\RWSSHDService_X64.msi TARGETDIR=\"C:\Program Files (x86)\" SVCUSERNAME=\"$username\" PASSWORD=\"$password\" PORT=\"22\" RMMSSHKEY=\"$ssh_key\""; then
         echo "Failed to install SSH package on $remote_device"
         continue
