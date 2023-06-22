@@ -3,6 +3,7 @@
 #variables
 port=22
 devices_file="./devices.txt"
+#add path of ps_script and msi pacakage
 local_ps_script="./ps_script.ps1"
 local_msi_64bit="./RWSSHDService_x64.msi"
 local_msi_32bit="./RWSSHDService.msi"
@@ -45,7 +46,7 @@ fi
 
 # if [ ! -f "$local_msi_32bit" ]; then
 #     echo "The file $local_msi_32bit does not exist in the current directory."
-#     exit 1
+#     continue
 # fi
 
 #Check if the Powershell script exists
@@ -111,7 +112,7 @@ for ((i = 0; i < ${#devices[@]}; i += 4)); do
     # Copy PowerShell Script to the remote device
     echo "Copying $local_ps_script ......"
     echo " "
-    smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_ps_script\" \"$remote_ps_file\""
+    timeout 10m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_ps_script\" \"$remote_ps_file\""
     if [ $? -eq 0 ]; then
         echo "Successfully copied $local_ps_script to $remote_device"
     else
@@ -135,7 +136,7 @@ for ((i = 0; i < ${#devices[@]}; i += 4)); do
         # Copy MSI file to the remote device
         echo "Copying $local_msi_64bit ......"
         echo " "
-        smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_64bit\" \"$remote_msi_64bit\""
+        timeout 30m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_64bit\" \"$remote_msi_64bit\""
         if [ $? -eq 0 ]; then
             echo "Successfully copied $local_msi_64bit to $remote_device"
         else
@@ -170,7 +171,7 @@ for ((i = 0; i < ${#devices[@]}; i += 4)); do
         # Copy MSI file to the remote device
         echo "Copying $local_msi_32bit ......"
         echo " "
-        smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_32bit\" \"$remote_msi_32bit\""
+        timeout 30m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_32bit\" \"$remote_msi_32bit\""
         if [ $? -eq 0 ]; then
             echo "Successfully copied $local_msi_32bit to $remote_device"
         else
@@ -193,7 +194,7 @@ for ((i = 0; i < ${#devices[@]}; i += 4)); do
         echo " "
         installation_output=$(./winexe -U "$username%$password" //"$remote_device" "powershell -ExecutionPolicy Bypass -File \"$ps_script_path\" -Username \"$username\" -Password \"$password\" -Port \"$port\" -Publickey \"$ssh_key\" -InstallDir \"$installation_path\" -PackagePath \"$msi_file_path\"")
         if [ $? -ne 0 ]; then
-            echo "Failed to install SSH package on $remote_device"
+            echo "Failed to execute powershell script through winexe on $remote_device"
             continue
         fi
         echo "$installation_output"
