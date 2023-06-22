@@ -40,18 +40,18 @@ fi
 
 #Check if the MSI file exists
 if [ ! -f "$local_msi_64bit" ]; then
-    echo "The file $local_msi_64bit does not exist in the current directory."
+    echo "The file $local_msi_64bit does not exist in the specified directory."
     exit 1
 fi
 
 # if [ ! -f "$local_msi_32bit" ]; then
-#     echo "The file $local_msi_32bit does not exist in the current directory."
+#     echo "The file $local_msi_32bit does not exist in the specified directory."
 #     continue
 # fi
 
 #Check if the Powershell script exists
 if [ ! -f "$local_ps_script" ]; then
-    echo "The file $local_ps_script does not exist in the current directory."
+    echo "The file $local_ps_script does not exist in the specified directory."
     exit 1
 fi
 
@@ -136,7 +136,7 @@ for ((i = 0; i < ${#devices[@]}; i += 4)); do
         # Copy MSI file to the remote device
         echo "Copying $local_msi_64bit ......"
         echo " "
-        timeout 30m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_64bit\" \"$remote_msi_64bit\""
+        timeout 20m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_64bit\" \"$remote_msi_64bit\""
         if [ $? -eq 0 ]; then
             echo "Successfully copied $local_msi_64bit to $remote_device"
         else
@@ -171,7 +171,7 @@ for ((i = 0; i < ${#devices[@]}; i += 4)); do
         # Copy MSI file to the remote device
         echo "Copying $local_msi_32bit ......"
         echo " "
-        timeout 30m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_32bit\" \"$remote_msi_32bit\""
+        timeout 20m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_32bit\" \"$remote_msi_32bit\""
         if [ $? -eq 0 ]; then
             echo "Successfully copied $local_msi_32bit to $remote_device"
         else
