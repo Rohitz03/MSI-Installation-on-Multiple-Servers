@@ -112,7 +112,7 @@ for ((i = 0; i < ${#devices[@]}; i += 4)); do
     # Copy PowerShell Script to the remote device
     echo "Copying $local_ps_script ......"
     echo " "
-    timeout 10m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_ps_script\" \"$remote_ps_file\""
+    timeout 2m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_ps_script\" \"$remote_ps_file\""
     if [ $? -eq 0 ]; then
         echo "Successfully copied $local_ps_script to $remote_device"
     else
@@ -136,7 +136,7 @@ for ((i = 0; i < ${#devices[@]}; i += 4)); do
         # Copy MSI file to the remote device
         echo "Copying $local_msi_64bit ......"
         echo " "
-        timeout 20m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_64bit\" \"$remote_msi_64bit\""
+        timeout 25m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_64bit\" \"$remote_msi_64bit\""
         if [ $? -eq 0 ]; then
             echo "Successfully copied $local_msi_64bit to $remote_device"
         else
@@ -171,7 +171,7 @@ for ((i = 0; i < ${#devices[@]}; i += 4)); do
         # Copy MSI file to the remote device
         echo "Copying $local_msi_32bit ......"
         echo " "
-        timeout 20m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_32bit\" \"$remote_msi_32bit\""
+        timeout 25m smbclient -U "$username%$password" "//$remote_device/$shared_folder" -c "put \"$local_msi_32bit\" \"$remote_msi_32bit\""
         if [ $? -eq 0 ]; then
             echo "Successfully copied $local_msi_32bit to $remote_device"
         else
